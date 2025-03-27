@@ -1,0 +1,97 @@
+.SwitchContainer{
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	align-items: center;
+}
+.Switch.Disabled > .SwitchCheckbox:checked + .SwitchBackground {
+	background: #b7c6ff;
+}
+.Switch.Disabled > .SwitchCheckbox:not(:checked) + .SwitchBackground {
+	background: #d8d8d8;
+}
+
+.Switch:not(.Disabled):hover .SwitchCircleBackground {
+	width: 30px;
+	height: 30px;
+	left: -6.5px;
+	top: -6.5px;
+	border-radius: 24px;
+}
+
+.SwitchCheckbox{
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
+.SwitchCheckbox:checked + .SwitchBackground>.SwitchCircleBackground {
+	transform: translateX(22px);
+}
+.Switch:not(.Disabled) > .SwitchCheckbox:checked + .SwitchBackground {
+	background: #375FFF;
+}
+.Switch:not(.Disabled) > .SwitchCheckbox:checked + .SwitchBackground>.SwitchCircleBackground {
+	background: #637d9b33;
+}
+.Switch:not(.Disabled) > .SwitchCheckbox:checked:active + .SwitchBackground>.SwitchCircleBackground {
+	background: #87a7cc4f;
+}
+.Switch:not(.Disabled) > .SwitchCheckbox:not(:checked):active + .SwitchBackground>.SwitchCircleBackground {
+	background: #a5a5a54f;
+}
+
+.SwitchCheckbox:active:enabled + .SwitchBackground>.SwitchCircleBackground>.SwitchCircle{
+	width: 19px;
+	height: 19px;
+}
+.Switch{
+	display: flex;
+}
+.SwitchText{
+	text-align: center;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 120%;
+	font-feature-settings: 'pnum' on, 'lnum' on;
+
+	color: #949494;
+}
+
+.SwitchBackground{
+	cursor: pointer;
+	display: flex;
+	width: 45px;
+	height: 23px;
+
+	background: #c5c5c5;
+	border-radius: 100px;
+	transition: 0.3s ease-out;
+}
+
+.SwitchCircle{
+	position: relative;
+	width: 17px;
+	height: 17px;
+	z-index: 2;
+	background: #F9F9F9;
+	border-radius: 24px;
+	transition: 0.3s ease-out;
+}
+.SwitchCircleBackground{
+	display: flex;
+	padding: 3px;
+	pointer-events: none;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 17px;
+	left: 0px;
+	top: 0px;
+	height: 17px;
+	background: #bbbbbb50;
+	border-radius: 24px;
+	transition: 0.3s ease-out;
+}
+
