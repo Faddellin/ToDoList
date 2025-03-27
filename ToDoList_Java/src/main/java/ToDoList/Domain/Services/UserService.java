@@ -20,13 +20,11 @@ import java.util.UUID;
 public class UserService implements IUserService {
 
     private UserRepository _userRepository;
-    private IPasswordService _passwordService;
     private JwtService _jwtService;
     private PasswordEncoder _passwordEncoder;
 
-    public UserService(UserRepository userRepository, IPasswordService passwordService, JwtService jwtService,PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, JwtService jwtService,PasswordEncoder passwordEncoder) {
         _userRepository = userRepository;
-        _passwordService = passwordService;
         _jwtService = jwtService;
         _passwordEncoder = passwordEncoder;
 

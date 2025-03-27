@@ -76,8 +76,8 @@ public class TaskService implements ITaskService {
 
         Task task = taskO.get();
 
-        if(task.getUserId() != userId){
-            throw new NotEnoughAccessException("You are trying to change not your task");
+        if(!task.getUserId().equals(userId)){
+            throw new NotEnoughAccessException("You are trying to get not your task");
         }
 
         task.setTitle(editTaskModel.getTitle());
@@ -104,8 +104,8 @@ public class TaskService implements ITaskService {
 
         Task task = taskO.get();
 
-        if(task.getUserId() != userId){
-            throw new NotEnoughAccessException("You are trying to change not your task");
+        if(!task.getUserId().equals(userId)){
+            throw new NotEnoughAccessException("You are trying to get not your task");
         }
 
         if(newStatus.equals(UserTaskStatusModel.Active)){
@@ -143,8 +143,8 @@ public class TaskService implements ITaskService {
 
         Task task = taskO.get();
 
-        if(task.getUserId() != userId){
-            throw new NotEnoughAccessException("You are trying to delete not your task");
+        if(!task.getUserId().equals(userId)){
+            throw new NotEnoughAccessException("You are trying to get not your task");
         }
 
         _taskRepository.deleteById(taskId);
@@ -155,7 +155,7 @@ public class TaskService implements ITaskService {
         LocalDate deadline = task.getDeadline();
         
         if(status == TaskStatus.Active && deadline.isBefore(LocalDate.now())){
-            task.setStatus(TaskStatus.Completed);
+            task.setStatus(TaskStatus.Overdue);
         }
     }
 
@@ -172,8 +172,8 @@ public class TaskService implements ITaskService {
 
         Task task = taskO.get();
 
-        if(task.getUserId() != userId){
-            throw new NotEnoughAccessException("You are trying to delete not your task");
+        if(!task.getUserId().equals(userId)){
+            throw new NotEnoughAccessException("You are trying to get not your task");
         }
 
         changeTaskStatus(task);

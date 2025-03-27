@@ -1,6 +1,7 @@
 package ToDoList.Presentation.Controllers;
 
 import ToDoList.Application.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.CustomExceptions.NotEnoughAccessException;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.TaskSortModel;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.UserTaskStatusModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.EditTaskModel;
@@ -39,7 +40,7 @@ public class TaskController {
     @PutMapping("{taskId}")
     @ResponseStatus(code = HttpStatus.OK, reason = "OK")
     public ResponseEntity<?> EditTask(@RequestBody EditTaskModel editTaskModel, @PathVariable("taskId") UUID taskId)
-            throws BadRequestException, KeyNotFoundException {
+            throws BadRequestException, KeyNotFoundException, NotEnoughAccessException {
 
         UUID userId  = GetUserIdFromSecurityContext();
 
@@ -50,7 +51,7 @@ public class TaskController {
     @PutMapping("{taskId}/status")
     @ResponseStatus(code = HttpStatus.OK, reason = "OK")
     public ResponseEntity<?> ChangeTaskStatus(@RequestParam("taskStatus") UserTaskStatusModel userTaskStatusModel, @PathVariable("taskId") UUID taskId)
-            throws BadRequestException, KeyNotFoundException {
+            throws BadRequestException, KeyNotFoundException, NotEnoughAccessException {
 
         UUID userId  = GetUserIdFromSecurityContext();
 
@@ -61,7 +62,7 @@ public class TaskController {
     @DeleteMapping("{taskId}")
     @ResponseStatus(code = HttpStatus.OK, reason = "OK")
     public ResponseEntity<?> DeleteTask(@PathVariable("taskId") UUID taskId)
-            throws BadRequestException, KeyNotFoundException {
+            throws BadRequestException, KeyNotFoundException, NotEnoughAccessException {
 
         UUID userId  = GetUserIdFromSecurityContext();
 
@@ -71,7 +72,7 @@ public class TaskController {
 
     @GetMapping("{taskId}")
     public ResponseEntity<TaskModel> GetTask(@PathVariable("taskId") UUID taskId)
-            throws BadRequestException, KeyNotFoundException {
+            throws BadRequestException, KeyNotFoundException, NotEnoughAccessException {
 
         UUID userId  = GetUserIdFromSecurityContext();
 
