@@ -1,9 +1,14 @@
 package ToDoList.Domain.Services;
 
 import ToDoList.Application.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.CustomExceptions.NotEnoughAccessException;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.TaskSortModel;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.UserTaskStatusModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.*;
+import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelComparators.TaskShortModelAscCreateTimeComparator;
+import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelComparators.TaskShortModelAscDeadlineComparator;
+import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelComparators.TaskShortModelDescCreateTimeComparator;
+import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelComparators.TaskShortModelDescDeadlineComparator;
 import ToDoList.Application.Services.Interfaces.Task.ITaskService;
 import ToDoList.Domain.Entities.Task.Task;
 import ToDoList.Domain.Entities.User.User;
@@ -54,18 +59,27 @@ public class TaskService implements ITaskService {
         return task.getId();
     }
 
-    public void editTask(UUID taskId, EditTaskModel editTaskModel) throws KeyNotFoundException, BadRequestException {
+    public void editTask(UUID taskId, UUID userId, EditTaskModel editTaskModel)
+            throws KeyNotFoundException, BadRequestException, NotEnoughAccessException {
+        Optional<User> userO = _userRepository.findById(userId);
         Optional<Task> taskO = _taskRepository.findById(taskId);
 
         if(!taskO.isPresent()){
             throw new KeyNotFoundException("Task is not found");
         }
-
+        if(!userO.isPresent()){
+            throw new KeyNotFoundException("User is not found");
+        }
         if(editTaskModel.getDeadline().isBefore(LocalDate.now())){
             throw new BadRequestException("Deadline can't be before now");
         }
 
         Task task = taskO.get();
+
+        if(task.getUserId() != userId){
+            throw new NotEnoughAccessException("You are trying to change not your task");
+        }
+
         task.setTitle(editTaskModel.getTitle());
         task.setDescription(editTaskModel.getDescription());
         task.setDeadline(editTaskModel.getDeadline());
@@ -76,14 +90,23 @@ public class TaskService implements ITaskService {
         _taskRepository.save(task);
     }
 
-    public void changeTaskStatus(UUID taskId, UserTaskStatusModel newStatus) throws KeyNotFoundException, BadRequestException {
+    public void changeTaskStatus(UUID taskId, UUID userId, UserTaskStatusModel newStatus)
+            throws KeyNotFoundException, BadRequestException, NotEnoughAccessException {
         Optional<Task> taskO = _taskRepository.findById(taskId);
+        Optional<User> userO = _userRepository.findById(userId);
 
         if(!taskO.isPresent()){
             throw new KeyNotFoundException("Task is not found");
         }
+        if(!userO.isPresent()){
+            throw new KeyNotFoundException("User is not found");
+        }
 
         Task task = taskO.get();
+
+        if(task.getUserId() != userId){
+            throw new NotEnoughAccessException("You are trying to change not your task");
+        }
 
         if(newStatus.equals(UserTaskStatusModel.Active)){
 
@@ -107,7 +130,23 @@ public class TaskService implements ITaskService {
 
     }
 
-    public void deleteTask(UUID taskId){
+    public void deleteTask(UUID taskId, UUID userId) throws KeyNotFoundException, NotEnoughAccessException {
+        Optional<Task> taskO = _taskRepository.findById(taskId);
+        Optional<User> userO = _userRepository.findById(userId);
+
+        if(!taskO.isPresent()){
+            throw new KeyNotFoundException("Task is not found");
+        }
+        if(!userO.isPresent()){
+            throw new KeyNotFoundException("User is not found");
+        }
+
+        Task task = taskO.get();
+
+        if(task.getUserId() != userId){
+            throw new NotEnoughAccessException("You are trying to delete not your task");
+        }
+
         _taskRepository.deleteById(taskId);
     }
 
@@ -120,18 +159,25 @@ public class TaskService implements ITaskService {
         }
     }
 
-    public TaskModel getTask(UUID taskId) throws KeyNotFoundException {
+    public TaskModel getTask(UUID taskId, UUID userId) throws KeyNotFoundException, NotEnoughAccessException {
         Optional<Task> taskO = _taskRepository.findById(taskId);
+        Optional<User> userO = _userRepository.findById(userId);
+
         if(!taskO.isPresent()){
-            throw  new KeyNotFoundException("Task is not found");
+            throw new KeyNotFoundException("Task is not found");
+        }
+        if(!userO.isPresent()){
+            throw new KeyNotFoundException("User is not found");
         }
 
         Task task = taskO.get();
 
+        if(task.getUserId() != userId){
+            throw new NotEnoughAccessException("You are trying to delete not your task");
+        }
 
         changeTaskStatus(task);
         _taskRepository.save(task);
-
 
         TaskModel taskModel = new TaskModel(task.getId(),
                 task.getTitle(),
@@ -161,11 +207,33 @@ public class TaskService implements ITaskService {
                     task.getTitle(),
                     task.getDeadline(),
                     task.getPriority(),
-                    task.getStatus())
+                    task.getStatus(),
+                    task.getCreateTime())
             );
         });
 
-        taskList.sort((TaskShortModel a, TaskShortModel b) -> { return  1});
+        if (taskSortModel != null){
+            Comparator taskShortModelComparator;
+
+            switch (taskSortModel){
+                case AscCreationTime:
+                    taskShortModelComparator =  new TaskShortModelAscCreateTimeComparator();
+                    break;
+                case DescCreationTime:
+                    taskShortModelComparator =  new TaskShortModelDescCreateTimeComparator();
+                    break;
+                case DescDeadline:
+                    taskShortModelComparator =  new TaskShortModelDescDeadlineComparator();
+                    break;
+                case AscDeadline:
+                    taskShortModelComparator =  new TaskShortModelAscDeadlineComparator();
+                    break;
+                default:
+                    taskShortModelComparator =  new TaskShortModelDescCreateTimeComparator();
+            }
+
+            taskShortModels.sort(taskShortModelComparator);
+        }
 
         TaskShortModelList taskShortModelList = new TaskShortModelList(taskShortModels);
 

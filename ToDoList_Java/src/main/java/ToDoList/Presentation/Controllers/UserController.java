@@ -1,9 +1,13 @@
 package ToDoList.Presentation.Controllers;
 
+import ToDoList.Application.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelList;
 import ToDoList.Application.Repositories.ModelsDTO.Token.TokenResponseModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserCreateModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserLoginDataModel;
 import ToDoList.Domain.Services.UserService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,15 +23,15 @@ public class UserController {
     }
 
     @PostMapping("auth")
-    public TokenResponseModel AuthorizeUser(@RequestBody UserLoginDataModel userLoginDataModel){
+    public ResponseEntity<TokenResponseModel> AuthorizeUser(@RequestBody UserLoginDataModel userLoginDataModel) throws KeyNotFoundException {
 
-        return _userService.authorizeUser(userLoginDataModel);
+        return ResponseEntity.ok(_userService.authorizeUser(userLoginDataModel));
     }
 
     @PostMapping
-    public UUID CreateUser(@RequestBody UserCreateModel userCreateModel){
+    public ResponseEntity<UUID> CreateUser(@RequestBody UserCreateModel userCreateModel){
 
-        return _userService.createUser(userCreateModel);
+        return ResponseEntity.ok(_userService.createUser(userCreateModel));
 
     }
 }

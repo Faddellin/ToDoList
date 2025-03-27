@@ -12,12 +12,14 @@ public class TaskShortModel {
 
     }
 
-    public TaskShortModel(UUID id, String title, LocalDate deadline, TaskPriority priority, TaskStatus status) {
+    public TaskShortModel(UUID id, String title, LocalDate deadline, TaskPriority priority, TaskStatus status,
+                          Date createTime) {
         this.id = id;
         this.title = title;
         this.deadline = deadline;
         this.priority = priority;
         this.status = status;
+        this.createTime = createTime;
     }
 
     private UUID id;
@@ -29,6 +31,8 @@ public class TaskShortModel {
     private TaskPriority priority;
 
     private LocalDate deadline;
+
+    private Date createTime;
 
     public UUID getId() {
         return id;
@@ -65,4 +69,10 @@ public class TaskShortModel {
         this.deadline = deadline;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

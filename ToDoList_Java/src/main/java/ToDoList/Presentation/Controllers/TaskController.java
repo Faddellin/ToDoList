@@ -1,19 +1,17 @@
 package ToDoList.Presentation.Controllers;
 
 import ToDoList.Application.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.Repositories.ModelsDTO.Enums.TaskSortModel;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.UserTaskStatusModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.EditTaskModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.TaskCreateModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.TaskModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelList;
-import ToDoList.Application.Repositories.ModelsDTO.Token.TokenResponseModel;
-import ToDoList.Application.Repositories.ModelsDTO.User.UserCreateModel;
-import ToDoList.Application.Repositories.ModelsDTO.User.UserLoginDataModel;
 import ToDoList.Application.Services.Interfaces.Task.ITaskService;
-import ToDoList.Domain.Services.TaskService;
-import ToDoList.Domain.Services.UserService;
-import com.sun.net.httpserver.Authenticator;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -28,42 +26,71 @@ public class TaskController {
         _taskService = taskService;
     }
 
-    @PostMapping("users/{userId}")
-    public UUID CreateTask(@RequestBody TaskCreateModel taskCreateModel, @PathVariable("userId") UUID userId) throws BadRequestException, KeyNotFoundException {
+    @PostMapping
+    public ResponseEntity<UUID> CreateTask(@RequestBody TaskCreateModel taskCreateModel)
+            throws BadRequestException, KeyNotFoundException {
 
-        return _taskService.createTask(userId,taskCreateModel);
+        UUID userId  = GetUserIdFromSecurityContext();
+
+        return ResponseEntity.ok(_taskService.createTask(userId,taskCreateModel));
 
     }
 
     @PutMapping("{taskId}")
-    public void EditTask(@RequestBody EditTaskModel editTaskModel, @PathVariable("taskId") UUID taskId) throws BadRequestException, KeyNotFoundException {
+    @ResponseStatus(code = HttpStatus.OK, reason = "OK")
+    public ResponseEntity<?> EditTask(@RequestBody EditTaskModel editTaskModel, @PathVariable("taskId") UUID taskId)
+            throws BadRequestException, KeyNotFoundException {
 
-        _taskService.editTask(taskId, editTaskModel);
+        UUID userId  = GetUserIdFromSecurityContext();
+
+        _taskService.editTask(taskId, userId, editTaskModel);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("{taskId}/status")
-    public void ChangeTaskStatus(@RequestBody UserTaskStatusModel userTaskStatusModel, @PathVariable("taskId") UUID taskId) throws BadRequestException, KeyNotFoundException {
+    @ResponseStatus(code = HttpStatus.OK, reason = "OK")
+    public ResponseEntity<?> ChangeTaskStatus(@RequestParam("taskStatus") UserTaskStatusModel userTaskStatusModel, @PathVariable("taskId") UUID taskId)
+            throws BadRequestException, KeyNotFoundException {
 
-        _taskService.changeTaskStatus(taskId, userTaskStatusModel);
+        UUID userId  = GetUserIdFromSecurityContext();
+
+        _taskService.changeTaskStatus(taskId, userId, userTaskStatusModel);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{taskId}")
-    public void DeleteTask(@PathVariable("taskId") UUID taskId) throws BadRequestException, KeyNotFoundException {
+    @ResponseStatus(code = HttpStatus.OK, reason = "OK")
+    public ResponseEntity<?> DeleteTask(@PathVariable("taskId") UUID taskId)
+            throws BadRequestException, KeyNotFoundException {
 
-        _taskService.deleteTask(taskId);
+        UUID userId  = GetUserIdFromSecurityContext();
+
+        _taskService.deleteTask(taskId, userId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{taskId}")
-    public TaskModel GetTask(@PathVariable("taskId") UUID taskId) throws BadRequestException, KeyNotFoundException {
+    public ResponseEntity<TaskModel> GetTask(@PathVariable("taskId") UUID taskId)
+            throws BadRequestException, KeyNotFoundException {
 
-        return _taskService.getTask(taskId);
+        UUID userId  = GetUserIdFromSecurityContext();
+
+        return ResponseEntity.ok(_taskService.getTask(taskId, userId));
 
     }
 
-    @GetMapping("users/{userId}")
-    public TaskShortModelList GetUserTasks(@PathVariable("userId") UUID userId) throws BadRequestException, KeyNotFoundException {
+    @GetMapping
+    public ResponseEntity<TaskShortModelList> GetUserTasks(@RequestParam(value = "taskSort", required = false) TaskSortModel taskSortModel) throws BadRequestException, KeyNotFoundException {
 
-        return _taskService.getUserTasks(userId);
+        UUID userId  = GetUserIdFromSecurityContext();
 
+        return ResponseEntity.ok(_taskService.getUserTasks(userId, taskSortModel));
+
+    }
+    private UUID GetUserIdFromSecurityContext(){
+        return  (UUID.fromString((String)
+                SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal()));
     }
 }
