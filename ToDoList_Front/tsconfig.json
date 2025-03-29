@@ -3,7 +3,7 @@
 	
 	"resolveJsonModule": true,
     "jsx": "react",
-    //"test": "/\\\\.(png|jp(e*)g|svg|gif)$/",
+    "test": "/\\\\.(png|jp(e*)g|svg|gif)$/",
     //"use": [ "file-loader" ],
 
     /* Visit https://aka.ms/tsconfig to read more about this file */

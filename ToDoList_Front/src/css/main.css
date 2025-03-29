@@ -3,7 +3,7 @@
 @import "PrimaryButton.css";
 @import "OutlinedButton.css";
 @import "Views/AuthorizationView.css";
-@import "LanguageSelector.css";
+@import "Views/MainView.css";
 
 * {
 	padding: 0;
@@ -31,6 +31,10 @@ body{
 	display: flex;
 	flex-direction: column;
 	gap: 80px;
+}
+
+.weight-600{
+	font-weight: 600;
 }
 
 @font-face {

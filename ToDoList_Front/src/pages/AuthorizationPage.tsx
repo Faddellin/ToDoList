@@ -1,14 +1,14 @@
 import React from "react"
 
-import AuthorizationForm from "../Forms/AuthorizationForm"
-import RegistrationForm from "../Forms/RegistrationForm"
+import AuthorizationForm from "../components/Forms/AuthorizationForm"
+import RegistrationForm from "../components/Forms/RegistrationForm"
 
 
 interface AuthorizationViewProps{
 	onLoginP : () => void
 }
 
-const AuthorizationView: React.FC<AuthorizationViewProps> = 
+const AuthorizationPage: React.FC<AuthorizationViewProps> = 
 	({
 		onLoginP
 	}) => {
@@ -24,11 +24,11 @@ const AuthorizationView: React.FC<AuthorizationViewProps> =
 			<div className="AuthorizationViewContentHandler">
 				{authorizing == true ? 
 				<AuthorizationForm onLoginClickP={onLoginP} onRegisterClickP={changeAuthorizing}/> : 
-				<RegistrationForm onLoginClickP={changeAuthorizing} onRegisterClickP={() => console.log("logined")}/>
+				<RegistrationForm onLoginClickP={changeAuthorizing} onRegisterClickP={onLoginP}/>
 				}
 			</div>
 		</div>)
 
 }
 
-export default AuthorizationView
+export default AuthorizationPage

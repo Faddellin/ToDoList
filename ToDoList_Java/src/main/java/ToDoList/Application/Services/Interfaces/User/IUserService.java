@@ -9,7 +9,7 @@ import ToDoList.Domain.Entities.User.User;
 import java.util.UUID;
 
 public interface IUserService {
-    UUID createUser(UserCreateModel userModel);
+    TokenResponseModel createUser(UserCreateModel userModel);
     TokenResponseModel authorizeUser(UserLoginDataModel userLoginDataModel) throws KeyNotFoundException;
     User getUserById(UUID userId) throws KeyNotFoundException;
     User getUserByEmail(String email) throws KeyNotFoundException;

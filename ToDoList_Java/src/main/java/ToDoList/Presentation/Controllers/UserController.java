@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> CreateUser(@RequestBody UserCreateModel userCreateModel){
+    public ResponseEntity<TokenResponseModel> CreateUser(@RequestBody UserCreateModel userCreateModel){
 
         return ResponseEntity.ok(_userService.createUser(userCreateModel));
 

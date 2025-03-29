@@ -30,16 +30,20 @@ public class UserService implements IUserService {
 
     }
     @Override
-    public UUID createUser(UserCreateModel userCreateModel){
+    public TokenResponseModel createUser(UserCreateModel userCreateModel){
         String encodedPassword = _passwordEncoder.encode(userCreateModel.getPassword());
 
         User user = new User(UUID.randomUUID(),
                 userCreateModel.getEmail(),
-                //_passwordService.CreateHashFromPassword(userCreateModel.getPassword()));
                 encodedPassword);
 
         _userRepository.save(user);
-        return user.getId();
+
+        var jwt = _jwtService.generateToken(user.getId());
+
+        TokenResponseModel tokenResponseModel = new TokenResponseModel(jwt);
+
+        return tokenResponseModel;
     }
     @Override
     public User getUserByEmail(String email) throws KeyNotFoundException {

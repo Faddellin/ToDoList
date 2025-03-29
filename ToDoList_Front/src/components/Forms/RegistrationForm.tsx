@@ -7,6 +7,7 @@ import AuthPhoto from "../../Icons/Authorization_Photo.svg"
 import PrimaryButton from "../Buttons/PrimaryButton"
 import OutlinedButton from "../Buttons/OutlinedButton"
 
+import RequestHandler from "../../RequestHandler"
 
 interface RegistrationFormProps{
 	onLoginClickP : () => void
@@ -19,14 +20,28 @@ const RegistrationForm: React.FC<RegistrationFormProps> =
 		onRegisterClickP
 	}) => {
 
+	const [emailValue, setEmailValue] = React.useState<string>("");
+	const [passwordValue, setPasswordValue] = React.useState<string>("");
+
+
+	const handleRegistration = async () =>{
+		let JwtToken = await RequestHandler.registerUser(emailValue,passwordValue);
+
+		if (JwtToken != null){
+			localStorage.setItem("jwtToken", JSON.stringify(JwtToken));
+			onRegisterClickP();
+		}
+
+	}
+
 	return (
 		<div className="RegistrationFormContainer">
 			<h1 className="RegistrationFormHeader">Регистрация</h1>
 			<div className="RegistrationForm">
-				<TextInput placeHolderP="" labelTextP="Электронная почта" disabledP={false}/>
-				<TextInput placeHolderP="" labelTextP="Пароль" disabledP={false}/>
+				<TextInput placeHolderP="" labelTextP="Электронная почта" disabledP={false} setParentValueFromInput={setEmailValue}/>
+				<TextInput placeHolderP="" labelTextP="Пароль" disabledP={false} setParentValueFromInput={setPasswordValue}/>
 				<div className="RegistrationFormButtons">
-					<PrimaryButton disabledP={false} onClickP={onRegisterClickP} buttonTextP="Зарегестрироваться"/>
+					<PrimaryButton disabledP={false} onClickP={handleRegistration} buttonTextP="Зарегестрироваться"/>
 					<OutlinedButton disabledP={false} onClickP={onLoginClickP} buttonTextP="Войти"/>
 				</div>
 			</div>
