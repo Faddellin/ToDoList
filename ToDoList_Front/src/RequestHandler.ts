@@ -1,13 +1,18 @@
 import axios from "axios";
 import { AxiosResponse, AxiosRequestConfig } from "axios";
 import ApiEndpoints from "./api/apiEndpoints";
-
+import { Task, TaskShort } from "./components/UI/Task/Tasks";
 
 const requestType = {
 	get: axios.get,
 	post: axios.post,
 	put: axios.put,
 	delete: axios.delete
+}
+
+type ErrorModel = {
+	message: string,
+	status: number
 }
 
 class RequestHandler{
@@ -19,14 +24,12 @@ class RequestHandler{
 		data?: any,
 		config?: AxiosRequestConfig
 	  ) {
-		var isSuccess = true;
 		const answer = await method(url, data, config)
 			.catch(error =>{
-			isSuccess = false;
-			console.log(error);
+			return Promise.reject(error.response.data);
 		});
 
-		return isSuccess == true ? answer!!.data : null;
+		return answer!!.data;
 	}
 
 
@@ -41,7 +44,7 @@ class RequestHandler{
 			email: email,
 			password: password
 			});
-			return data == null ? null : data!!.jwtToken;
+		return data.status != null ? data : data!!.jwtToken;
 	}
 
 
@@ -56,21 +59,56 @@ class RequestHandler{
 			email: email,
 			password: password
 			});
-			return data == null ? null : data!!.jwtToken;
+			return data.status != null ? data : data!!.jwtToken;
 	}
 
 
-	static async getUserTasks(jwtToken: string) : Promise<Array<any>>
-	{
+	static async getUserTasks(jwtToken: string, taskSortModel: string) : Promise<Array<TaskShort>>
+	{	
 		const data = await RequestHandler.sendRequest(
 			requestType.get,
-			ApiEndpoints.getGetUserTasksUrl(),
+			ApiEndpoints.getGetUserTasksUrl(taskSortModel),
 			{
 				headers:{
 					Authorization: `Bearer ${jwtToken}`
 				}
 			});
-			return data == null ? new Array() : data!!.taskShortModelList;
+
+			return data.status != null ? data : data!!.taskShortModelList;
+	}
+
+	static async getConcreteTasks(jwtToken: string, taskId: string) : Promise<Task>
+	{	
+		const data = await RequestHandler.sendRequest(
+			requestType.get,
+			ApiEndpoints.getGetTaskUrl(taskId),
+			{
+				headers:{
+					Authorization: `Bearer ${jwtToken}`
+				}
+			});
+
+			return data.status != null ? data : data!!.taskShortModelList;
+	}
+
+	static async createTask(jwtToken: string, title: string, description: string, deadline: string, priority:string) : Promise<Array<any>>
+	{	
+		const data = await RequestHandler.sendRequest(
+			requestType.post,
+			ApiEndpoints.getGetUserTasksUrl(),
+			{
+				title: title,
+				deadline: deadline,
+				priority: priority,
+				description: description,
+			},
+			{
+				headers:{
+					Authorization: `Bearer ${jwtToken}`
+				}
+			});
+
+			return data.status != null ? data : data!!.taskShortModelList;
 	}
 }
 

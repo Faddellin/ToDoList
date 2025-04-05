@@ -1,6 +1,6 @@
 package ToDoList.Application.Services.Interfaces.User;
 
-import ToDoList.Application.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.Exceptions.CustomExceptions.KeyNotFoundException;
 import ToDoList.Application.Repositories.ModelsDTO.Token.TokenResponseModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserCreateModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserLoginDataModel;

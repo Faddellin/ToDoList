@@ -24,8 +24,9 @@ class ApiEndpoints{
 	static getGetTaskUrl(taskId: string){
 		return `${baseApiRoute}tasks/${taskId}`;
 	}
-	static getGetUserTasksUrl(){
-		return `${baseApiRoute}tasks`;
+	static getGetUserTasksUrl(taskSortModel?: string | null){
+		var taskSort = `taskSort=${taskSortModel}`;
+		return `${baseApiRoute}tasks?${taskSort}`;
 	}
 }
 

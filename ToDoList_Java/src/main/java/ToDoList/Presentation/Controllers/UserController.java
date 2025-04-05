@@ -1,16 +1,12 @@
 package ToDoList.Presentation.Controllers;
 
-import ToDoList.Application.CustomExceptions.KeyNotFoundException;
-import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelList;
+import ToDoList.Application.Exceptions.CustomExceptions.KeyNotFoundException;
 import ToDoList.Application.Repositories.ModelsDTO.Token.TokenResponseModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserCreateModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserLoginDataModel;
 import ToDoList.Domain.Services.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")

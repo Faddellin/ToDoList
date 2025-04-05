@@ -1,15 +1,12 @@
 package ToDoList.Domain.Services;
 
-import ToDoList.Application.CustomExceptions.KeyNotFoundException;
-import ToDoList.Application.Repositories.Interfaces.IUserRepository;
+import ToDoList.Application.Exceptions.CustomExceptions.KeyNotFoundException;
 import ToDoList.Application.Repositories.ModelsDTO.Token.TokenResponseModel;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserLoginDataModel;
-import ToDoList.Application.Services.Interfaces.User.IPasswordService;
 import ToDoList.Application.Services.Interfaces.User.IUserService;
 import ToDoList.Application.Repositories.ModelsDTO.User.UserCreateModel;
 import ToDoList.Domain.Entities.User.User;
 import ToDoList.Infrastructure.PostgreDB.Repositories.UserRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +68,7 @@ public class UserService implements IUserService {
         User user = getUserByEmail(userLoginDataModel.getEmail());
 
         if (!_passwordEncoder.matches(userLoginDataModel.getPassword(), user.getPassword())){
-            throw  new KeyNotFoundException("Password is not found");
+            throw  new KeyNotFoundException("Password is not correct");
         }
 
         var jwt = _jwtService.generateToken(user.getId());

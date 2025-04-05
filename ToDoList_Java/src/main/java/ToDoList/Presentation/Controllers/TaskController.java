@@ -1,7 +1,7 @@
 package ToDoList.Presentation.Controllers;
 
-import ToDoList.Application.CustomExceptions.KeyNotFoundException;
-import ToDoList.Application.CustomExceptions.NotEnoughAccessException;
+import ToDoList.Application.Exceptions.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.Exceptions.CustomExceptions.NotEnoughAccessException;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.TaskSortModel;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.UserTaskStatusModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.EditTaskModel;
@@ -81,7 +81,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<TaskShortModelList> GetUserTasks(@RequestParam(value = "taskSort", required = false) TaskSortModel taskSortModel) throws BadRequestException, KeyNotFoundException {
+    public ResponseEntity<TaskShortModelList> GetUserTasks(@RequestParam(name = "taskSort", required = false) TaskSortModel taskSortModel) throws BadRequestException, KeyNotFoundException {
 
         UUID userId  = GetUserIdFromSecurityContext();
 

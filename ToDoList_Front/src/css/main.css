@@ -1,9 +1,12 @@
-@import "TextInputImproved.css";
-@import "Switch.css";
-@import "PrimaryButton.css";
-@import "OutlinedButton.css";
-@import "Views/AuthorizationView.css";
-@import "Views/MainView.css";
+@import "TextInputs/TextInputImproved.css";
+@import "TextInputs/TextInputArea.css";
+@import "TextInputs/TextInputDate.css";
+@import "Switch/Switch.css";
+@import "Buttons/PrimaryButton.css";
+@import "Buttons/OutlinedButton.css";
+@import "Pages/AuthorizationPage.css";
+@import "Pages/MainPage.css";
+@import "Alert/Alert.css";
 
 * {
 	padding: 0;

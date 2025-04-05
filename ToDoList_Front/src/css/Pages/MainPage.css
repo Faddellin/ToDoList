@@ -1,0 +1,40 @@
+@import "../WorkingArea/WorkingArea.css";
+@import "../Task/TaskShort.css";
+@import "../Forms/TaskCreateForm.css";
+@import "../Forms/TaskEditForm.css";
+
+
+.MainViewContainer{
+	display: flex;
+	flex-direction: row;
+
+	min-height: 100vh;
+
+	overflow-x: clip;
+	font-family: 'RalewayRegular';
+	--workingAreaWidth: 450px;
+}
+.MainViewTasksContainer{
+	display: flex;
+	
+	width: 100vw;
+	padding: 2rem;
+
+	background-color: #EFEFEF;
+	overflow-y: scroll;
+	scrollbar-width: none;
+	box-sizing: border-box;
+	
+}
+.MainViewTasksContainerHandler{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+
+	row-gap: 1rem;
+	column-gap: 1rem;
+	height: 0px;
+}
+
+
+

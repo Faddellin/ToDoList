@@ -1,7 +1,7 @@
 package ToDoList.Application.Services.Interfaces.Task;
 
-import ToDoList.Application.CustomExceptions.KeyNotFoundException;
-import ToDoList.Application.CustomExceptions.NotEnoughAccessException;
+import ToDoList.Application.Exceptions.CustomExceptions.KeyNotFoundException;
+import ToDoList.Application.Exceptions.CustomExceptions.NotEnoughAccessException;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.TaskSortModel;
 import ToDoList.Application.Repositories.ModelsDTO.Enums.UserTaskStatusModel;
 import ToDoList.Application.Repositories.ModelsDTO.Task.TaskCreateModel;

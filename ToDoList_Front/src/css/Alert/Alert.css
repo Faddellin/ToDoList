@@ -1,0 +1,110 @@
+.AlertListContainer{
+	position: absolute;
+	display: flex;
+
+	flex-direction: column-reverse;
+
+	max-height: 50%;
+	overflow: scroll;
+	scrollbar-width: none;
+
+	gap: 1rem;
+	padding-bottom: 1rem;
+	padding-left: 1rem;
+
+	left: 0px;
+	bottom: 0px;
+}
+
+.AlertContainer{
+	z-index: 4;
+	position: relative;
+	
+	width:fit-content;
+
+	transition: 0.3s ease;
+}
+
+.AlertContainer.visible{
+	transform: translateX(0%);
+}
+.AlertContainer.invisible{
+	transform: translateX(calc(-100% - 1rem));
+}
+.AlertHandler{
+	display: flex;
+	flex-direction: column;
+	max-width: 16rem;
+	min-width: 14rem;
+	font-family: "RobotoRegular";
+}
+
+.AlertHeaderHandler{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	font-size: 0.875rem;
+	font-weight: 500;
+
+	padding: 0.5rem 1.5rem;
+
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+
+}
+
+.AlertHeaderHandler.Error{
+	background-color: rgb(255, 188, 188);
+	color: rgb(255, 87, 87);
+}
+.AlertHeaderHandler.Success{
+	background-color: rgb(172, 209, 166);
+	color: rgb(57, 136, 44);
+}
+.AlertHeaderHandler.Information{
+	background-color: rgb(171, 217, 253);
+	color: rgb(33, 150, 243);
+}
+.AlertHeaderHandler.Warning{
+	background-color: rgb(246, 210, 162);
+	color: rgb(231, 132, 0);
+}
+
+.AlertHeaderInformationHandler{
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.AlertHeaderIconContainer{
+	display: flex;
+	width: 1.5rem;
+	height: 1.5rem;
+	justify-content: center;
+	align-items: center;
+}
+.AlertHeaderInformationIcon{
+	width: 1.125rem;
+	height: 1.125rem;
+}
+.AlertHeaderCloseIcon{
+	width: 0.75rem;
+	height: 0.75rem;
+	cursor: pointer;
+}
+
+.AlertMainHandler{
+	display: flex;
+
+	font-size: 0.875rem;
+	font-weight: 500;
+
+	padding: 0.5rem 1.5rem;
+
+	border-bottom-left-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	background-color: #F9F9F9;
+	color: #393939;
+}

@@ -1,7 +1,7 @@
 import React from "react"
 
-import AuthorizationForm from "../components/Forms/AuthorizationForm"
-import RegistrationForm from "../components/Forms/RegistrationForm"
+import AuthorizationForm from "../components/UI/Forms/AuthorizationForm"
+import RegistrationForm from "../components/UI/Forms/RegistrationForm"
 
 
 interface AuthorizationViewProps{
@@ -15,7 +15,6 @@ const AuthorizationPage: React.FC<AuthorizationViewProps> =
 	const [authorizing, setAuthorizing] = React.useState<boolean>(true);
 
 	const changeAuthorizing = () =>{
-		console.log("check");
 		setAuthorizing(!authorizing);
 	}
 
