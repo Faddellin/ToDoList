@@ -74,7 +74,7 @@ const TaskEditFormC: React.FC<TaskEditFormProps> =
 					
 					<p className="TaskEditFormTimeHandler">Дата создания: {DateConvertor.GetDateWithTime(new Date(taskP.createTime))}</p>
 					<p className="TaskEditFormTimeHandler">Дата последнего обновления: {
-					taskP.updateTime ? DateConvertor.GetDateWithoutTime(new Date(taskP.updateTime)) : "-"
+					taskP.updateTime ? DateConvertor.GetDateWithTime(new Date(taskP.updateTime)) : "-"
 					}</p>
 					
 					<div className="TaskEditFormButtonContainer">
