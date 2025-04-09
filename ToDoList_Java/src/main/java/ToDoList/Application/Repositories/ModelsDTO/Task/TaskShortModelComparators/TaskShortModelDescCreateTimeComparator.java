@@ -13,11 +13,11 @@ public class TaskShortModelDescCreateTimeComparator implements Comparator<TaskSh
         Date sCreateTime = o2.getCreateTime();
 
         if (fCreateTime.after(sCreateTime)) {
-            return 1;
-        }else if(fCreateTime.before(sCreateTime)) {
-            return 0;
-        }else{
             return -1;
+        }else if(fCreateTime.before(sCreateTime)) {
+            return 1;
+        }else{
+            return 0;
         }
     }
 }

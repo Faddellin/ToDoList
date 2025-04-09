@@ -5,7 +5,7 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import AuthorizationPage from "../pages/AuthorizationPage"
 import MainView from "../pages/MainPage"
 
-import { AlertList } from "./UI/Alert/AlertList"
+import { AlertListC } from "./UI/Alert/AlertListC"
 
 import {Routes, Route } from 'react-router-dom';
 import { useNavigate } from "react-router";
@@ -29,7 +29,7 @@ const App: React.FC<AppProps> =
 	return (
 		<AlertProvider>
 			<AuthProvider>
-				<AlertList/>
+				<AlertListC/>
 				<Routes>
 					<Route element={<ProtectedRoute pathToRedirect="/auth" />}>
 						<Route path="/" element={<MainView />}></Route>

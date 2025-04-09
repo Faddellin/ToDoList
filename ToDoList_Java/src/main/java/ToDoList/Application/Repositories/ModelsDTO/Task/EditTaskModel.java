@@ -3,6 +3,7 @@ package ToDoList.Application.Repositories.ModelsDTO.Task;
 import ToDoList.Domain.Enums.TaskPriority;
 import ToDoList.Domain.Enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -18,14 +19,19 @@ public class EditTaskModel {
         this.deadline = deadline;
         this.priority = priority;
         this.description = description;
+        this.status = status;
     }
 
     private String title;
 
     private String description;
 
+    @Nullable
     private TaskPriority priority;
 
+    private TaskStatus status;
+
+    @Nullable
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
 
@@ -57,4 +63,7 @@ public class EditTaskModel {
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
+
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
 }

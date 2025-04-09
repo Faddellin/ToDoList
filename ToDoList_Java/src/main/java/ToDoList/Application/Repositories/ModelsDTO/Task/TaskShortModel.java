@@ -2,6 +2,7 @@ package ToDoList.Application.Repositories.ModelsDTO.Task;
 
 import ToDoList.Domain.Enums.TaskPriority;
 import ToDoList.Domain.Enums.TaskStatus;
+import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class TaskShortModel {
 
     private TaskPriority priority;
 
+    @Nullable
     private LocalDate deadline;
 
     private Date createTime;

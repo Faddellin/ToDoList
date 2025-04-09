@@ -48,17 +48,6 @@ public class TaskController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{taskId}/status")
-    @ResponseStatus(code = HttpStatus.OK, reason = "OK")
-    public ResponseEntity<?> ChangeTaskStatus(@RequestParam("taskStatus") UserTaskStatusModel userTaskStatusModel, @PathVariable("taskId") UUID taskId)
-            throws BadRequestException, KeyNotFoundException, NotEnoughAccessException {
-
-        UUID userId  = GetUserIdFromSecurityContext();
-
-        _taskService.changeTaskStatus(taskId, userId, userTaskStatusModel);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("{taskId}")
     @ResponseStatus(code = HttpStatus.OK, reason = "OK")
     public ResponseEntity<?> DeleteTask(@PathVariable("taskId") UUID taskId)

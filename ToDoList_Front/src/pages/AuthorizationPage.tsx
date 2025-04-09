@@ -1,7 +1,7 @@
 import React from "react"
 
-import AuthorizationForm from "../components/UI/Forms/AuthorizationForm"
-import RegistrationForm from "../components/UI/Forms/RegistrationForm"
+import AuthorizationForm from "../components/UI/Forms/AuthorizationFormC"
+import RegistrationForm from "../components/UI/Forms/RegistrationFormC"
 
 
 interface AuthorizationViewProps{

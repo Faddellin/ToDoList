@@ -1,7 +1,10 @@
 import axios from "axios";
 import { AxiosResponse, AxiosRequestConfig } from "axios";
 import ApiEndpoints from "./api/apiEndpoints";
-import { Task, TaskShort } from "./components/UI/Task/Tasks";
+import { Task } from "./models/Task/Task";
+import { TaskShort } from "./models/Task/TaskShort";
+import { TaskCreateModel } from "./models/Task/TaskCreateModel";
+import { TaskEditModel } from "./models/Task/TaskEditModel";
 
 const requestType = {
 	get: axios.get,
@@ -41,10 +44,10 @@ class RequestHandler{
 			requestType.post,
 			ApiEndpoints.getAuthorizeUserUrl(),
 			{
-			email: email,
-			password: password
+				email: email,
+				password: password
 			});
-		return data.status != null ? data : data!!.jwtToken;
+		return data.jwtToken;
 	}
 
 
@@ -56,10 +59,10 @@ class RequestHandler{
 			requestType.post,
 			ApiEndpoints.getRegisterUserUrl(),
 			{
-			email: email,
-			password: password
+				email: email,
+				password: password
 			});
-			return data.status != null ? data : data!!.jwtToken;
+			return data.jwtToken;
 	}
 
 
@@ -74,7 +77,7 @@ class RequestHandler{
 				}
 			});
 
-			return data.status != null ? data : data!!.taskShortModelList;
+			return data.taskShortModelList;
 	}
 
 	static async getConcreteTasks(jwtToken: string, taskId: string) : Promise<Task>
@@ -88,19 +91,19 @@ class RequestHandler{
 				}
 			});
 
-			return data.status != null ? data : data!!.taskShortModelList;
+			return data;
 	}
 
-	static async createTask(jwtToken: string, title: string, description: string, deadline: string, priority:string) : Promise<Array<any>>
+	static async createTask(jwtToken: string, taskCreateModel: TaskCreateModel) : Promise<Array<any>>
 	{	
 		const data = await RequestHandler.sendRequest(
 			requestType.post,
 			ApiEndpoints.getGetUserTasksUrl(),
 			{
-				title: title,
-				deadline: deadline,
-				priority: priority,
-				description: description,
+				title: taskCreateModel.title,
+				deadline: taskCreateModel.deadline,
+				priority: taskCreateModel.priority,
+				description: taskCreateModel.description,
 			},
 			{
 				headers:{
@@ -108,7 +111,42 @@ class RequestHandler{
 				}
 			});
 
-			return data.status != null ? data : data!!.taskShortModelList;
+			return data;
+	}
+
+	static async editTask(jwtToken: string, taskId:string, taskEditModel:TaskEditModel) : Promise<any>
+	{	
+		const data = await RequestHandler.sendRequest(
+			requestType.put,
+			ApiEndpoints.getEditTaskUrl(taskId),
+			{
+				title: taskEditModel.title,
+				deadline: taskEditModel.deadline,
+				priority: taskEditModel.priority,
+				description: taskEditModel.description,
+				status: taskEditModel.status
+			},
+			{
+				headers:{
+					Authorization: `Bearer ${jwtToken}`
+				}
+			});
+
+			return data;
+	}
+
+	static async deleteTask(jwtToken: string, taskId: string) : Promise<boolean>
+	{	
+		const data = await RequestHandler.sendRequest(
+			requestType.delete,
+			ApiEndpoints.getDeleteTaskUrl(taskId),
+			{
+				headers:{
+					Authorization: `Bearer ${jwtToken}`
+				}
+			});
+
+			return data;
 	}
 }
 

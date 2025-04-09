@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/auth").permitAll()
+                        .requestMatchers("/api/v1/users/auth", "/error", "/api/v1/users").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptions -> exceptions

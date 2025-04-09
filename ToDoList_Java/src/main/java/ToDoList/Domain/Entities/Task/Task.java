@@ -3,6 +3,7 @@ package ToDoList.Domain.Entities.Task;
 import ToDoList.Domain.Entities.User.User;
 import ToDoList.Domain.Enums.TaskPriority;
 import ToDoList.Domain.Enums.TaskStatus;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,7 @@ public class Task {
     }
 
     public Task(UUID id, UUID userId, String title, String description, TaskStatus status,
-                TaskPriority priority,  LocalDate deadline, Date createTime) {
+                TaskPriority priority,  LocalDate deadline, Date createTime, Date updateTime) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -28,7 +29,7 @@ public class Task {
         this.status = status;
         this.description = description;
         this.createTime = createTime;
-        this.updateTime = createTime;
+        this.updateTime = updateTime;
     }
 
     @Id
@@ -66,8 +67,7 @@ public class Task {
     @Column(name = "createTime", nullable = false)
     private Date createTime;
 
-    @NotNull
-    @Column(name = "updateTime", nullable = false)
+    @Column(name = "updateTime")
     private Date updateTime;
 
     public UUID getId() {

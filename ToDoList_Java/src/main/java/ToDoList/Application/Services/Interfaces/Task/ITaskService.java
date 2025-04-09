@@ -17,8 +17,6 @@ public interface ITaskService {
 
     void editTask(UUID taskId, UUID userId, EditTaskModel editTaskModel) throws KeyNotFoundException, BadRequestException, NotEnoughAccessException;
 
-    void changeTaskStatus(UUID taskId, UUID userId, UserTaskStatusModel newStatus) throws KeyNotFoundException, BadRequestException, NotEnoughAccessException;
-
     void deleteTask(UUID taskId, UUID userId) throws KeyNotFoundException, NotEnoughAccessException;
 
     TaskShortModelList getUserTasks(UUID userId, TaskSortModel taskSortModel) throws KeyNotFoundException;

@@ -5,17 +5,15 @@ interface TextInputAreaProps{
 	labelTextP: string;
 	disabledP: boolean;
 	inputTextP?: string;
-	supportTextP?: string;
 	setParentValueFromInput: (inputValue: string) => void
 }
 
-const TextInputArea: React.FC<TextInputAreaProps> = 
+const TextInputAreaC: React.FC<TextInputAreaProps> = 
 	({
 		placeHolderP,
 		labelTextP,
 		disabledP,
 		inputTextP,
-		supportTextP,
 		setParentValueFromInput
 	}) => {
 	const [inputText, setInputText] = React.useState<string>(inputTextP === undefined ? "" : inputTextP);
@@ -39,4 +37,4 @@ const TextInputArea: React.FC<TextInputAreaProps> =
 	);
 }
 
-export default TextInputArea
+export default TextInputAreaC

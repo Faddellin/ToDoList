@@ -2,26 +2,33 @@ import React from "react";
 import { DateConvertor } from "../../../utility/DateConvertor";
 
 interface TextInputDateProps{
-	inputDateP?: string;
+	inputDateP?: Date | undefined;
 	labelTextP: string;
 	disabledP: boolean;
-	setParentValueFromInput: (inputValue: string) => void
+	setParentValueFromInputP: (inputValue: Date | undefined) => void
 }
 
-const TextInputDate: React.FC<TextInputDateProps> = 
+const TextInputDateC: React.FC<TextInputDateProps> = 
 	({
+		inputDateP,
 		labelTextP,
 		disabledP,
-		setParentValueFromInput
+		setParentValueFromInputP
 	}) => {
-	const [inputDate, setInputDate] = React.useState<Date>(new Date(Date.now()));
+	const [inputDate, setInputDate] = React.useState<Date | undefined>(inputDateP);
 	const [disabled, setDisabled] = React.useState<boolean>(disabledP);
 
 	const changeInputTextDate = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newDate = new Date(event.target.value);
-		setInputDate(newDate);
+		
+		if (isNaN(newDate.getTime())){
+			setInputDate(undefined);
+			setParentValueFromInputP(undefined);
+		}else{
+			setInputDate(newDate);
+			setParentValueFromInputP(newDate);
+		}
 
-		setParentValueFromInput(DateConvertor.GetDateWithoutTime(newDate));
 	};
 
 	return(
@@ -35,4 +42,4 @@ const TextInputDate: React.FC<TextInputDateProps> =
 	);
 }
 
-export default TextInputDate
+export default TextInputDateC

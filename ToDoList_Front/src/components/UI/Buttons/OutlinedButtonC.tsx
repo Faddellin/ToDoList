@@ -6,7 +6,7 @@ interface OutlinedButtonProps{
 	disabledP: boolean;
 }
 
-const OutlinedButton: React.FC<OutlinedButtonProps> = 
+const OutlinedButtonC: React.FC<OutlinedButtonProps> = 
 	({
 		buttonTextP,
 		onClickP,
@@ -23,4 +23,4 @@ const OutlinedButton: React.FC<OutlinedButtonProps> =
 	)
 }
 
-export default OutlinedButton
+export default OutlinedButtonC

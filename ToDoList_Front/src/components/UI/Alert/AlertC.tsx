@@ -10,7 +10,7 @@ import AlertCloseWarningIcon from "../../../Icons/Alert/Warning/AlertClose.svg"
 import AlertInformationInformationIcon from "../../../Icons/Alert/Information/AlertInformation.svg"
 import AlertCloseInformationIcon from "../../../Icons/Alert/Information/AlertClose.svg"
 
-import { Alert, AlertType } from "../../../Providers/AlertProvider";
+import { Alert, AlertType } from "../../../models/Alert/Alert"
 import { useAlert } from "../../../hooks/useAlert";
 
 interface AlertCProps{

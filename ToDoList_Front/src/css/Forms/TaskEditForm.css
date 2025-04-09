@@ -56,4 +56,35 @@
 .TaskEditFormButtonContainer{
 	display: flex;
 	margin-left: auto;
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+}
+.TaskEditFormDeleteButton{
+	display: flex;
+	padding: 1.5rem;
+	box-sizing: border-box;
+
+	cursor: pointer;
+
+	border-radius: 0.8rem;
+	border: 2px solid #3A3A3A;
+	background-image: url("../../Icons/DeleteIcon.svg");
+	background-repeat: no-repeat;
+	background-position: 50%;
+	background-size: 50%;
+
+	transition: 0.3s ease;
+}
+.TaskEditFormDeleteButton:hover{
+	background-size: 60%;
+	background-color: #eeaeae;
+}
+.TaskEditFormDeleteButton:active{
+	background-size: 50%;
+	background-color: #e69a9a;
+}
+.TaskEditFormTimeHandler{
+	border-left: 2px solid #a5c0e0;
+	padding: 1rem;
 }

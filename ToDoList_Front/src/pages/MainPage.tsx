@@ -1,19 +1,21 @@
 import React, { useEffect,useRef } from "react"
 
-import TaskCreateForm from "../components/UI/Forms/TaskCreateForm"
-import TaskEditForm from "../components/UI/Forms/TaskEditForm"
+import TaskCreateFormC from "../components/UI/Forms/TaskCreateFormC"
+import TaskEditFormC from "../components/UI/Forms/TaskEditFormC"
 
-import Vector from "../Icons/Vector.svg"
 import RequestHandler from "../RequestHandler"
 import useLocalStorage from "../hooks/useLocalStorage"
-import Tasks, { Task } from "../components/UI/Task/Tasks"
+import { Task } from "../models/Task/Task"
+import TasksC from "../components/UI/Task/TasksC"
 import { useAuth } from "../hooks/useAuth"
-import WorkingArea from "../components/UI/WorkingArea/WorkingArea"
-import { AxiosError } from "axios"
-import {AlertC} from "../components/UI/Alert/Alert"
-import { Alert, AlertType } from "../Providers/AlertProvider"
-import { AlertList } from "../components/UI/Alert/AlertList"
+import WorkingAreaC from "../components/UI/WorkingArea/WorkingAreaC"
+
+import { Alert, AlertType } from "../models/Alert/Alert"
+import { AlertListC } from "../components/UI/Alert/AlertListC"
 import { useAlert } from "../hooks/useAlert"
+
+import { TaskCreateModel } from "../models/Task/TaskCreateModel"
+import { TaskEditModel } from "../models/Task/TaskEditModel"
 
 interface MainViewProps{
 }
@@ -27,25 +29,67 @@ const MainPage: React.FC<MainViewProps> =
 	const [isEditingTask, setIsEditingTask] = React.useState<boolean>(false);
 	const currentEditingTask = useRef<Task>(null);
 	const {jwtToken, setAsUnauthorized} = useAuth();
+
 	const {addAlert} = useAlert();
 	var TaskSortType: string = "AscCreationTime";
 
-	const onCreateTask = async (title: string, description: string, deadline: string, priority:string) => {
-		if(title.length == 0){
+	const onCreateTask = async (taskCreateModel: TaskCreateModel) => {
+		if(taskCreateModel.title.length == 0){
 			addAlert(new Alert(AlertType.Error, "Название задачи не может быть пустым"));
 			return false;
 		}
-		if(description.length == 0){
+		if(taskCreateModel.description.length == 0){
 			addAlert(new Alert(AlertType.Error, "Описание задачи не может быть пустым"));
 			return false;
 		}
-		if(deadline.length == 0){
-			addAlert(new Alert(AlertType.Error, "Дедлайн задачи не может быть пустым"));
+		if(taskCreateModel.priority == ""){
+			taskCreateModel.priority = undefined;
+		}
+		try{
+
+			await RequestHandler.createTask(jwtToken, taskCreateModel);
+			loadTasks();
+			return true;
+		}catch(e : any)
+		{
+			if (e.status == 401){
+				setAsUnauthorized();
+			}
+			addAlert(new Alert(AlertType.Error, e.message));
 			return false;
+		}
+	}
+
+	const onEditTask = async (taskId: string, taskEditModel: TaskEditModel) => {
+		if(taskEditModel.title.length == 0){
+			addAlert(new Alert(AlertType.Error, "Название задачи не может быть пустым"));
+			return false;
+		}
+		if(taskEditModel.description.length == 0){
+			addAlert(new Alert(AlertType.Error, "Описание задачи не может быть пустым"));
+			return false;
+		}
+		if(taskEditModel.priority == ""){
+			taskEditModel.priority = undefined;
 		}
 
 		try{
-			await RequestHandler.createTask(jwtToken, title, description, deadline, priority);
+			await RequestHandler.editTask(jwtToken, taskId, taskEditModel);
+			loadTasks();
+			return true;
+		}catch(e : any)
+		{
+			if (e.status == 401){
+				setAsUnauthorized();
+			}
+			addAlert(new Alert(AlertType.Error, e.message));
+			return false;
+		}
+	}
+
+	const onDeleteTask = async (taskId: string) => {
+		try{
+			await RequestHandler.deleteTask(jwtToken, taskId);
 			loadTasks();
 			return true;
 		}catch(e : any)
@@ -61,9 +105,9 @@ const MainPage: React.FC<MainViewProps> =
 	const loadTasks = async () =>{
 		try{
 			const tasks = await RequestHandler.getUserTasks(jwtToken, TaskSortType);
+			
 			setTasksList(tasks);
 		}catch(e : any){
-			console.log(e);
 			if (e.status == 401){
 				setAsUnauthorized();
 			}
@@ -81,10 +125,8 @@ const MainPage: React.FC<MainViewProps> =
 	const startEditingTask = async (taskId: string) => {
 		try{
 			currentEditingTask.current = await RequestHandler.getConcreteTasks(jwtToken, taskId);
-			console.log(currentEditingTask.current);
 			setIsEditingTask(true);
 		}catch(e : any){
-			console.log(e);
 			if (e.status == 401){
 				setAsUnauthorized();
 			}
@@ -94,15 +136,15 @@ const MainPage: React.FC<MainViewProps> =
 
 	return (
 		<div className="MainViewContainer">
-			{isCreatingTask ? <TaskCreateForm onDiscardTaskCreation={() => setIsCreatingTask(false)} onCreateTask={onCreateTask}/> : null }
-			{isEditingTask ? <TaskEditForm onDiscardTaskEditingP={() => setIsEditingTask(false)} onEditTaskP={onCreateTask} taskP={currentEditingTask.current!}/> : null }
+			{isCreatingTask ? <TaskCreateFormC onDiscardTaskCreationP={() => setIsCreatingTask(false)} onCreateTaskP={onCreateTask}/> : null }
+			{isEditingTask ? <TaskEditFormC onDiscardTaskEditingP={() => setIsEditingTask(false)} onEditTaskP={onEditTask}
+			 taskP={currentEditingTask.current!} onDeletButtonClickP={onDeleteTask}/> : null }
 			<div className="MainViewTasksContainer">
 				<div className="MainViewTasksContainerHandler">
-					<button onClick={() => startEditingTask("0f905d7f-8551-4dd3-a5e5-9bdffcb22872")}>fdfsf</button>
-					<Tasks tasksListP={tasksList}/>
+					<TasksC tasksListP={tasksList} onTaskClickP={startEditingTask} />
 				</div>
 			</div>
-			<WorkingArea onTaskCreateButtonClickP={() => setIsCreatingTask(true)} onSortChange={handleSortTypeChange}/>
+			<WorkingAreaC onTaskCreateButtonClickP={() => setIsCreatingTask(true)} onSortChangeP={handleSortTypeChange}/>
 		</div>)
 
 }

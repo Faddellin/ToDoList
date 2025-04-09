@@ -1,13 +1,13 @@
 import React, { createRef, useRef } from "react";
 import { useEffect } from "react";
 import { useAlert } from "../../../hooks/useAlert";
-import { AlertC } from "./Alert";
+import { AlertC } from "./AlertC";
 
 interface AlertListProps{
 
 }
 
-export const AlertList: React.FC<AlertListProps> = 
+export const AlertListC: React.FC<AlertListProps> = 
 	({
 
 	}) => {

@@ -6,17 +6,17 @@ interface TextInputProps{
 	disabledP: boolean;
 	inputTextP?: string;
 	supportTextP?: string;
-	setParentValueFromInput: (inputValue: string) => void
+	setParentValueFromInputP: (inputValue: string) => void
 }
 
-const TextInput: React.FC<TextInputProps> = 
+const TextInputC: React.FC<TextInputProps> = 
 	({
 		placeHolderP,
 		labelTextP,
 		disabledP,
 		inputTextP,
 		supportTextP,
-		setParentValueFromInput
+		setParentValueFromInputP
 	}) => {
 	const [inputText, setInputText] = React.useState<string>(inputTextP === undefined ? "" : inputTextP);
 	const [disabled, setDisabled] = React.useState<boolean>(disabledP);
@@ -24,7 +24,7 @@ const TextInput: React.FC<TextInputProps> =
 
 	const changeInputText = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setInputText(event.target.value);
-		setParentValueFromInput(event.target.value);
+		setParentValueFromInputP(event.target.value);
 	};
 
 	return(
@@ -44,4 +44,4 @@ const TextInput: React.FC<TextInputProps> =
 	);
 }
 
-export default TextInput
+export default TextInputC

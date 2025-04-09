@@ -1,24 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useRef } from "react"
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { Alert, AlertType } from "../models/Alert/Alert"
 
-export class Alert{
-	alertType: AlertType;
-	alertText: string;
-	id: number;
-	constructor(alertType: AlertType, alertText: string){
-		this.alertType = alertType;
-		this.alertText = alertText;
-		this.id = 0;
-	}
-}
-export enum AlertType {
-	Information,
-	Error,
-	Success,
-	Warning
-}
 
 interface AlertContextType {
 	addAlert: (alert: Alert) => void;

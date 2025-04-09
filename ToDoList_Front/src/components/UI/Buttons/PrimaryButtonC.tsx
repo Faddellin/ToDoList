@@ -7,7 +7,7 @@ interface PrimaryButtonProps{
 	isSmallP?: boolean;
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = 
+const PrimaryButtonC: React.FC<PrimaryButtonProps> = 
 	({
 		buttonTextP,
 		onClickP,
@@ -25,4 +25,4 @@ const PrimaryButton: React.FC<PrimaryButtonProps> =
 	)
 }
 
-export default PrimaryButton
+export default PrimaryButtonC

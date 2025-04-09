@@ -2,6 +2,7 @@ package ToDoList.Application.Repositories.ModelsDTO.Task;
 
 import ToDoList.Domain.Enums.TaskPriority;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -22,8 +23,10 @@ public class TaskCreateModel {
 
     private String description;
 
+    @Nullable
     private TaskPriority priority;
 
+    @Nullable
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
 

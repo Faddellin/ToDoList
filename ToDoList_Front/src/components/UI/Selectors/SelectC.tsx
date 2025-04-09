@@ -1,14 +1,6 @@
 import React, { createRef, useRef } from "react";
 import { useEffect } from "react";
-
-export class SelectElement{
-	value: string;
-	text: string;
-	constructor(value: string, text: string){
-		this.value = value;
-		this.text = text;
-	}
-}
+import { SelectElement } from "../../../models/Select/SelectElement";
 
 interface SelectProps{
 	selectedValueP?: string;
@@ -18,7 +10,7 @@ interface SelectProps{
 	setParentValueFromSelectP: (selectedValue: string) => void;
 }
 
-const Select: React.FC<SelectProps> = 
+const SelectC: React.FC<SelectProps> = 
 	({
 		selectedValueP,
 		labelTextP,
@@ -66,4 +58,4 @@ const Select: React.FC<SelectProps> =
 	);
 }
 
-export default Select
+export default SelectC

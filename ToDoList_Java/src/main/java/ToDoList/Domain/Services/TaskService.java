@@ -12,6 +12,7 @@ import ToDoList.Application.Repositories.ModelsDTO.Task.TaskShortModelComparator
 import ToDoList.Application.Services.Interfaces.Task.ITaskService;
 import ToDoList.Domain.Entities.Task.Task;
 import ToDoList.Domain.Entities.User.User;
+import ToDoList.Domain.Enums.TaskPriority;
 import ToDoList.Domain.Enums.TaskStatus;
 import ToDoList.Infrastructure.PostgreDB.Repositories.TaskRepository;
 import ToDoList.Infrastructure.PostgreDB.Repositories.UserRepository;
@@ -19,7 +20,10 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TaskService implements ITaskService {
@@ -41,8 +45,22 @@ public class TaskService implements ITaskService {
             throw new KeyNotFoundException("User is not found");
         }
 
-        if(taskCreateModel.getDeadline().isBefore(LocalDate.now())){
-            throw new BadRequestException("Deadline can't be before now");
+        TaskPriority taskPriority = taskCreateModel.getPriority();
+        LocalDate deadline = taskCreateModel.getDeadline();
+
+        if (taskCreateModel.getPriority() == null){
+            String[] titleRef = new String[]{taskCreateModel.getTitle()};
+            taskPriority =
+                    calculateTaskPriorityByTitleMacros(titleRef, TaskPriority.Medium);
+
+            taskCreateModel.setTitle(titleRef[0]);
+
+        }
+        if (taskCreateModel.getDeadline() == null){
+            String[] titleRef = new String[]{taskCreateModel.getTitle()};
+            deadline =
+                    calculateTaskDeadlineByTitleMacros(titleRef);
+            taskCreateModel.setTitle(titleRef[0]);
         }
 
         Task task = new Task(
@@ -51,12 +69,65 @@ public class TaskService implements ITaskService {
                 taskCreateModel.getTitle(),
                 taskCreateModel.getDescription(),
                 TaskStatus.Active,
-                taskCreateModel.getPriority(),
-                taskCreateModel.getDeadline(),
-                Calendar.getInstance().getTime()
+                taskPriority,
+                deadline,
+                Calendar.getInstance().getTime(),
+                null
         );
         _taskRepository.save(task);
         return task.getId();
+    }
+
+    private TaskPriority calculateTaskPriorityByTitleMacros(String[] titleRef, TaskPriority defaultPriority) {
+
+        String title = titleRef[0];
+        Pattern pattern = Pattern.compile("![1-4]");
+        Matcher matcher = pattern.matcher(title);
+
+        TaskPriority taskPriority = defaultPriority;
+
+        if (matcher.find()) {
+            String findedResult = title.substring(matcher.start(), matcher.end());
+            titleRef[0] = title.replace(findedResult, "");
+            switch (findedResult) {
+                case "!1":
+                    taskPriority = TaskPriority.Low;
+                    break;
+                case "!2":
+                    taskPriority = TaskPriority.Medium;
+                    break;
+                case "!3":
+                    taskPriority = TaskPriority.High;
+                    break;
+                case "!4":
+                    taskPriority = TaskPriority.Critical;
+                    break;
+            }
+        }
+        return taskPriority;
+    }
+
+    private LocalDate calculateTaskDeadlineByTitleMacros(String[] titleRef) {
+
+        String title = titleRef[0];
+        Pattern pattern = Pattern.compile("!before ((0[1-9]|1[0-9]|2[0-9]|3[0-1])[.-](0[1-9]|1[012])[.-][0-9]{4})");
+        Matcher matcher = pattern.matcher(title);
+
+        LocalDate deadline = null;
+
+        if (matcher.find()) {
+            String findedResult = title.substring(matcher.start(), matcher.end());
+            titleRef[0] = title.replace(findedResult, "");
+
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            String dateGroup = matcher.group(1);
+            dateGroup = dateGroup.replace(".", "-");
+
+            deadline = LocalDate.parse(dateGroup, inputFormatter);
+
+        }
+        return deadline;
     }
 
     public void editTask(UUID taskId, UUID userId, EditTaskModel editTaskModel)
@@ -70,11 +141,27 @@ public class TaskService implements ITaskService {
         if(!userO.isPresent()){
             throw new KeyNotFoundException("User is not found");
         }
-        if(editTaskModel.getDeadline().isBefore(LocalDate.now())){
-            throw new BadRequestException("Deadline can't be before now");
-        }
+
 
         Task task = taskO.get();
+
+        TaskPriority taskPriority = editTaskModel.getPriority();
+        LocalDate deadline = editTaskModel.getDeadline();
+
+        if (editTaskModel.getPriority() == null){
+            String[] titleRef = new String[]{editTaskModel.getTitle()};
+            taskPriority =
+                    calculateTaskPriorityByTitleMacros(titleRef, TaskPriority.Medium);
+
+            editTaskModel.setTitle(titleRef[0]);
+
+        }
+        if (editTaskModel.getDeadline() == null){
+            String[] titleRef = new String[]{editTaskModel.getTitle()};
+            deadline =
+                    calculateTaskDeadlineByTitleMacros(titleRef);
+            editTaskModel.setTitle(titleRef[0]);
+        }
 
         if(!task.getUserId().equals(userId)){
             throw new NotEnoughAccessException("You are trying to get not your task");
@@ -82,35 +169,13 @@ public class TaskService implements ITaskService {
 
         task.setTitle(editTaskModel.getTitle());
         task.setDescription(editTaskModel.getDescription());
-        task.setDeadline(editTaskModel.getDeadline());
-        task.setPriority(editTaskModel.getPriority());
+        task.setDeadline(deadline);
+        task.setPriority(taskPriority);
         task.setUpdateTime(Calendar.getInstance().getTime());
 
+        if(editTaskModel.getStatus().equals(TaskStatus.Active) || editTaskModel.getStatus().equals(TaskStatus.Overdue)){
 
-        _taskRepository.save(task);
-    }
-
-    public void changeTaskStatus(UUID taskId, UUID userId, UserTaskStatusModel newStatus)
-            throws KeyNotFoundException, BadRequestException, NotEnoughAccessException {
-        Optional<Task> taskO = _taskRepository.findById(taskId);
-        Optional<User> userO = _userRepository.findById(userId);
-
-        if(!taskO.isPresent()){
-            throw new KeyNotFoundException("Task is not found");
-        }
-        if(!userO.isPresent()){
-            throw new KeyNotFoundException("User is not found");
-        }
-
-        Task task = taskO.get();
-
-        if(!task.getUserId().equals(userId)){
-            throw new NotEnoughAccessException("You are trying to get not your task");
-        }
-
-        if(newStatus.equals(UserTaskStatusModel.Active)){
-
-            if (task.getDeadline().isBefore(LocalDate.now())){
+            if (deadline != null && deadline.isBefore(LocalDate.now())){
                 task.setStatus(TaskStatus.Overdue);
             }else{
                 task.setStatus(TaskStatus.Active);
@@ -118,7 +183,7 @@ public class TaskService implements ITaskService {
 
         }else{
 
-            if (task.getDeadline().isBefore(LocalDate.now())){
+            if (deadline != null && deadline.isBefore(LocalDate.now())){
                 task.setStatus(TaskStatus.Late);
             }else {
                 task.setStatus(TaskStatus.Completed);
@@ -127,7 +192,6 @@ public class TaskService implements ITaskService {
         }
 
         _taskRepository.save(task);
-
     }
 
     public void deleteTask(UUID taskId, UUID userId) throws KeyNotFoundException, NotEnoughAccessException {
@@ -154,7 +218,7 @@ public class TaskService implements ITaskService {
         TaskStatus status = task.getStatus();
         LocalDate deadline = task.getDeadline();
         
-        if(status == TaskStatus.Active && deadline.isBefore(LocalDate.now())){
+        if(deadline != null && status == TaskStatus.Active && deadline.isBefore(LocalDate.now())){
             task.setStatus(TaskStatus.Overdue);
         }
     }

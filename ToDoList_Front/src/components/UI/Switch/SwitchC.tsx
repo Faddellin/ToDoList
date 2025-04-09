@@ -5,7 +5,7 @@ interface SwitchProps{
 	disabledP: boolean;
 	checkedP: boolean;
 }
-const Switch: React.FC<SwitchProps> = 
+const SwitchC: React.FC<SwitchProps> = 
 	({
 		switchTextP,
 		disabledP,
@@ -34,4 +34,4 @@ const Switch: React.FC<SwitchProps> =
 	)
 }
 
-export default Switch
+export default SwitchC

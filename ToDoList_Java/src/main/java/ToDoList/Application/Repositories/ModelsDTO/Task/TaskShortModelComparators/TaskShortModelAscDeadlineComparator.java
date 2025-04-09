@@ -11,12 +11,22 @@ public class TaskShortModelAscDeadlineComparator implements Comparator<TaskShort
         LocalDate fDeadline = o1.getDeadline();
         LocalDate sDeadline = o2.getDeadline();
 
-        if (fDeadline.isAfter(sDeadline)) {
-            return -1;
-        }else if(fDeadline.isBefore(sDeadline)) {
+        if(fDeadline == null && sDeadline == null) {
             return 0;
-        }else{
+        }
+        if(fDeadline == null && sDeadline != null) {
             return 1;
+        }
+        if(fDeadline != null && sDeadline == null) {
+            return -1;
+        }
+
+        if (fDeadline.isAfter(sDeadline)) {
+            return 1;
+        }else if(fDeadline.isBefore(sDeadline)) {
+            return -1;
+        }else{
+            return 0;
         }
     }
 }

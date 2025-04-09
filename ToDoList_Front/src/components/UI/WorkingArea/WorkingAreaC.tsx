@@ -2,20 +2,22 @@ import React from "react"
 
 import Vector from "../../../Icons/Vector.svg"
 
-import PrimaryButton from "../Buttons/PrimaryButton"
+import PrimaryButtonC from "../Buttons/PrimaryButtonC"
 
-import Select, { SelectElement } from "../Selectors/Select"
+import SelectC from "../Selectors/SelectC"
+import { SelectElement } from "../../../models/Select/SelectElement"
+
 import { useAuth } from "../../../hooks/useAuth"
 
 interface RegistrationFormProps{
 	onTaskCreateButtonClickP: () => void;
-	onSortChange: (taskSortModel: string) => void;
+	onSortChangeP: (taskSortModel: string) => void;
 }
 
-const WorkingArea: React.FC<RegistrationFormProps> = 
+const WorkingAreaC: React.FC<RegistrationFormProps> = 
 	({
 		onTaskCreateButtonClickP,
-		onSortChange
+		onSortChangeP
 	}) => {
 
 	const arrayOfValuesToSelect = [new SelectElement("AscCreationTime","Возрастанию даты создания"),
@@ -34,13 +36,13 @@ const WorkingArea: React.FC<RegistrationFormProps> =
 				</label>
 				<div className="WorkingAreaUsable">
 					<div className="WorkingAreaUsableLogout">
-						<PrimaryButton buttonTextP="Выход" disabledP={false} onClickP={setAsUnauthorized} isSmallP={true}/>
+						<PrimaryButtonC buttonTextP="Выход" disabledP={false} onClickP={setAsUnauthorized} isSmallP={true}/>
 					</div>
 					<div className="WorkingAreaUsableSettings">
-						<Select labelTextP="Сортировать по" disabledP={false} valuesToSelectP={arrayOfValuesToSelect} setParentValueFromSelectP={onSortChange}/>
+						<SelectC labelTextP="Сортировать по" disabledP={false} valuesToSelectP={arrayOfValuesToSelect} setParentValueFromSelectP={onSortChangeP}/>
 					</div>
 					<div className="WorkingAreaUsableCreateTask">
-						<PrimaryButton buttonTextP="Создать задачу" disabledP={false} onClickP={onTaskCreateButtonClickP}/>
+						<PrimaryButtonC buttonTextP="Создать задачу" disabledP={false} onClickP={onTaskCreateButtonClickP}/>
 					</div>
 				</div>
 			</div>
@@ -50,4 +52,4 @@ const WorkingArea: React.FC<RegistrationFormProps> =
 
 }
 
-export default WorkingArea
+export default WorkingAreaC
